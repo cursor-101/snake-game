@@ -134,26 +134,105 @@ function updateGame() {
 // 게임 그리기
 function drawGame() {
     // 캔버스 지우기
-    ctx.fillStyle = '#222';
+    ctx.fillStyle = '#e8f5e9'; // 배경색을 연한 녹색으로 변경
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // 사과 그리기
+    // 격자 그리기
+    ctx.strokeStyle = '#c8e6c9'; // 연한 녹색 격자선
+    for (let i = 0; i < tileCount; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * gridSize, 0);
+        ctx.lineTo(i * gridSize, canvas.height);
+        ctx.stroke();
+        
+        ctx.beginPath();
+        ctx.moveTo(0, i * gridSize);
+        ctx.lineTo(canvas.width, i * gridSize);
+        ctx.stroke();
+    }
+    
+    // 사과 그리기 - 원형으로 변경
     ctx.fillStyle = 'red';
-    ctx.fillRect(appleX * gridSize, appleY * gridSize, gridSize, gridSize);
+    ctx.beginPath();
+    ctx.arc(
+        (appleX * gridSize) + gridSize/2, 
+        (appleY * gridSize) + gridSize/2, 
+        gridSize/2 - 2, 
+        0, 
+        Math.PI * 2
+    );
+    ctx.fill();
+    
+    // 사과 꼭지 그리기
+    ctx.fillStyle = '#388E3C';
+    ctx.fillRect(appleX * gridSize + gridSize/2 - 2, appleY * gridSize + 2, 4, 4);
     
     // 뱀 그리기
     for (let i = 0; i < snake.length; i++) {
-        // 머리는 다른 색상으로 표시
+        // 뱀 부분 (원형으로 그리기)
         if (i === 0) {
-            ctx.fillStyle = '#00FF00'; // 머리는 밝은 녹색
+            ctx.fillStyle = '#4CAF50'; // 머리는 녹색
         } else {
-            ctx.fillStyle = '#009900'; // 몸통은 어두운 녹색
+            ctx.fillStyle = '#81C784'; // 몸통은 연한 녹색
         }
-        ctx.fillRect(snake[i].x * gridSize, snake[i].y * gridSize, gridSize, gridSize);
         
-        // 뱀 칸에 테두리 추가
-        ctx.strokeStyle = '#222';
-        ctx.strokeRect(snake[i].x * gridSize, snake[i].y * gridSize, gridSize, gridSize);
+        // 원 그리기
+        ctx.beginPath();
+        ctx.arc(
+            (snake[i].x * gridSize) + gridSize/2, 
+            (snake[i].y * gridSize) + gridSize/2, 
+            gridSize/2 - 1, 
+            0, 
+            Math.PI * 2
+        );
+        ctx.fill();
+        
+        // 머리에 눈 추가
+        if (i === 0) {
+            // 방향에 따라 눈 위치 조정
+            let eyeX1, eyeY1, eyeX2, eyeY2;
+            const eyeOffset = gridSize / 4;
+            
+            if (velocityX === 1) { // 오른쪽을 보는 경우
+                eyeX1 = (snake[i].x * gridSize) + gridSize - 6;
+                eyeY1 = (snake[i].y * gridSize) + 7;
+                eyeX2 = (snake[i].x * gridSize) + gridSize - 6;
+                eyeY2 = (snake[i].y * gridSize) + gridSize - 7;
+            } else if (velocityX === -1) { // 왼쪽을 보는 경우
+                eyeX1 = (snake[i].x * gridSize) + 6;
+                eyeY1 = (snake[i].y * gridSize) + 7;
+                eyeX2 = (snake[i].x * gridSize) + 6;
+                eyeY2 = (snake[i].y * gridSize) + gridSize - 7;
+            } else if (velocityY === -1) { // 위쪽을 보는 경우
+                eyeX1 = (snake[i].x * gridSize) + 7;
+                eyeY1 = (snake[i].y * gridSize) + 6;
+                eyeX2 = (snake[i].x * gridSize) + gridSize - 7;
+                eyeY2 = (snake[i].y * gridSize) + 6;
+            } else { // 아래쪽을 보는 경우 (기본)
+                eyeX1 = (snake[i].x * gridSize) + 7;
+                eyeY1 = (snake[i].y * gridSize) + gridSize - 6;
+                eyeX2 = (snake[i].x * gridSize) + gridSize - 7;
+                eyeY2 = (snake[i].y * gridSize) + gridSize - 6;
+            }
+            
+            // 눈 그리기
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(eyeX1, eyeY1, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeX2, eyeY2, 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 눈동자 그리기
+            ctx.fillStyle = 'black';
+            ctx.beginPath();
+            ctx.arc(eyeX1, eyeY1, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(eyeX2, eyeY2, 1.5, 0, Math.PI * 2);
+            ctx.fill();
+        }
     }
 }
 
