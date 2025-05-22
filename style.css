@@ -36,7 +36,7 @@ h1 {
 
 canvas {
     border: 2px solid #333;
-    background-color: #222;
+    background-color: #e8f5e9; /* 배경색을 더 밝은 연한 녹색으로 변경 */
 }
 
 .controls {
