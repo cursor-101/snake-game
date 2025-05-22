@@ -45,7 +45,7 @@ const scoreElement = document.getElementById('score');
 const highScoreElement = document.getElementById('highScore');
 const startBtn = document.getElementById('startBtn');
 
-// 게임 메시지 요소 생성
+// 게임 메시지 요소 생성 (게임 오버와 일시정지만 표시)
 const messageContainer = document.createElement('div');
 messageContainer.className = 'message-container';
 messageContainer.style.position = 'absolute';
@@ -143,7 +143,6 @@ function gameLoop() {
     if (!gameRunning) return;
     
     // 일정 시간마다 게임 상태 업데이트
-    const now = Date.now();
     if (!gamePaused) {
         updateGame();
         drawGame();
@@ -478,15 +477,6 @@ startBtn.addEventListener('click', function() {
         
         // 게임 루프 시작
         gameLoop();
-        
-        // 시작 안내 메시지 잠시 표시
-        messageContainer.innerHTML = '<h2>시작!</h2><p>방향키로 뱀을 조작하세요</p>';
-        messageContainer.style.display = 'block';
-        setTimeout(() => {
-            if (gameRunning && !gamePaused) {
-                messageContainer.style.display = 'none';
-            }
-        }, 1500);
     } else {
         // 게임 재시작
         initGame();
